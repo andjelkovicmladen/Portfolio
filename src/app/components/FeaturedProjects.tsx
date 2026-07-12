@@ -3,16 +3,36 @@ import { ExternalLink } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import image1 from "../../imports/image-5.png";
 import image2 from "../../imports/image-3.png";
-import image3 from "../../imports/image-6.png";
+import imageCashFlow from "../../imports/image-cashflow.jpg";
 
-const projects = [
+type Project = {
+  title: string;
+  subtitle: string;
+  description: string;
+  tech: string[];
+  details: string;
+  image: string;
+  link?: string;
+};
+
+const projects: Project[] = [
   {
-    title: "Poslovi & Prakse",
-    subtitle: "Career Platform",
-    description: "A modern web platform connecting students and alumni with tech companies for jobs and internships.",
-    tech: ["Next.js (App Router)", "TypeScript", "Tailwind CSS", "Custom UI components"],
-    details: "Frontend: Next.js (App Router), TypeScript, Tailwind CSS, Custom UI components. Backend: Server-side rendering, robust directory structures.",
-    image: image1
+    title: "CareerHub — Poslovi & Prakse",
+    subtitle: "Full-Stack Career Platform",
+    description: "A deployed web platform connecting students and companies: companies post jobs and internships, students search listings, track salary statistics, and read IT news.",
+    tech: ["Next.js (App Router)", "PostgreSQL", "Prisma", "Tailwind CSS", "Recharts"],
+    details: "Features: analytics dashboard (students vs. companies, average salaries), job & internship search, live IT news via GNews, salary data via Adzuna, and an admin panel. Live on Render.",
+    image: image1,
+    link: "https://career-hub-xolr.onrender.com/"
+  },
+  {
+    title: "Cash Flow Forecasting & Analytics",
+    subtitle: "Financial Analytics Dashboard",
+    description: "An end-to-end financial analytics platform that pairs a Next.js/PostgreSQL dashboard with a Python time-series forecasting engine to predict and visualize cash flow, burn rate, and 90-day runway.",
+    tech: ["Next.js", "TypeScript", "PostgreSQL", "Python", "Time-Series Forecasting"],
+    details: "Features: 90-day cash-flow forecasting (linear trend with day-of-month and weekday seasonality), burn-rate & runway metrics, anomaly alerts, and interactive charts. Deployed on Vercel with a Neon PostgreSQL database.",
+    image: imageCashFlow,
+    link: "https://model-za-predikciju-novcanih-tokova.vercel.app/"
   },
   {
     title: "Fitness Tracking & Billing System",
@@ -21,14 +41,6 @@ const projects = [
     tech: ["C#", ".NET Framework", "SQL Database", "Layered Architecture"],
     details: "Architecture: Layered architecture including server logic, domain layers, and customized database broker classes.",
     image: image2
-  },
-  {
-    title: "Personal Portfolio Website",
-    subtitle: "Modern Developer Portfolio",
-    description: "A high-end, dark-mode portfolio website showcasing projects, skills, and experience with stunning neon purple and cyan aesthetics.",
-    tech: ["React", "TypeScript", "Tailwind CSS", "Motion (Framer Motion)", "Vite"],
-    details: "Features: Gradient text effects, smooth animations, responsive design, interactive contact form, and modern SaaS-style UI components.",
-    image: image3
   }
 ];
 
@@ -69,12 +81,26 @@ export function FeaturedProjects() {
                 </div>
                 
                 <div className={`p-8 flex flex-col justify-center ${index % 2 === 1 ? 'lg:order-1' : ''}`}>
-                  <div className="flex items-center gap-2 mb-2">
-                    <h3 className="text-2xl md:text-3xl text-cyan-300">
-                      {project.title}
-                    </h3>
-                    <ExternalLink className="w-5 h-5 text-purple-400 opacity-70" />
-                  </div>
+                  {project.link ? (
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 mb-2 group/link w-fit"
+                    >
+                      <h3 className="text-2xl md:text-3xl text-cyan-300 group-hover/link:text-cyan-200 transition-colors">
+                        {project.title}
+                      </h3>
+                      <ExternalLink className="w-5 h-5 text-purple-400 opacity-70 group-hover/link:opacity-100 transition-opacity" />
+                    </a>
+                  ) : (
+                    <div className="flex items-center gap-2 mb-2">
+                      <h3 className="text-2xl md:text-3xl text-cyan-300">
+                        {project.title}
+                      </h3>
+                      <ExternalLink className="w-5 h-5 text-purple-400 opacity-70" />
+                    </div>
+                  )}
                   
                   <p className="text-purple-400 text-sm mb-4">{project.subtitle}</p>
                   
