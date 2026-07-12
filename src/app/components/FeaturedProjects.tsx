@@ -1,9 +1,13 @@
+import { useState } from "react";
 import { motion } from "motion/react";
 import { ExternalLink } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import image1 from "../../imports/image-5.png";
-import image2 from "../../imports/image-3.png";
 import imageCashFlow from "../../imports/image-cashflow.jpg";
+import imageFitness from "../../imports/image-fitness.jpg";
+import imageFitnessMembers from "../../imports/image-fitness-members.jpg";
+import imageFitnessInvoice from "../../imports/image-fitness-invoice.jpg";
+import imageFitnessLogin from "../../imports/image-fitness-login.jpg";
 
 type Project = {
   title: string;
@@ -12,6 +16,7 @@ type Project = {
   tech: string[];
   details: string;
   image: string;
+  images?: string[];
   link?: string;
 };
 
@@ -36,13 +41,56 @@ const projects: Project[] = [
   },
   {
     title: "Fitness Tracking & Billing System",
-    subtitle: "Comprehensive Gym Management",
-    description: "A comprehensive software system for tracking gym memberships, services, and managing billing transactions.",
-    tech: ["C#", ".NET Framework", "SQL Database", "Layered Architecture"],
-    details: "Architecture: Layered architecture including server logic, domain layers, and customized database broker classes.",
-    image: image2
+    subtitle: "Full-Stack Gym Management",
+    description: "A full-stack system for managing gym members, fitness services, invoices, and training appointments — with three entry channels into the same business logic and database.",
+    tech: ["C# / .NET 8", "ASP.NET Core (REST API + JWT)", "React 19", "TypeScript", "Azure & Vercel"],
+    details: "Originally a C#/.NET WinForms client–server app (TCP sockets + JSON), extended with an ASP.NET Core 8 REST API (JWT, Swagger) and a React + TypeScript frontend. Deployed on Azure (API + SQL) and Vercel (web).",
+    image: imageFitness,
+    images: [imageFitness, imageFitnessMembers, imageFitnessInvoice, imageFitnessLogin],
+    link: "https://sistem-za-evidenciju-i-naplatu-fitn.vercel.app"
   }
 ];
+
+function ProjectMedia({ project }: { project: Project }) {
+  const gallery = project.images && project.images.length > 1 ? project.images : null;
+  const [active, setActive] = useState(0);
+  const current = gallery ? gallery[active] : project.image;
+
+  return (
+    <div className="relative h-full min-h-[16rem]">
+      <ImageWithFallback
+        src={current}
+        alt={project.title}
+        className="w-full h-full object-cover"
+        isImport={true}
+      />
+      {gallery && (
+        <div className="absolute bottom-0 inset-x-0 flex gap-2 p-3 bg-gradient-to-t from-gray-950/80 to-transparent">
+          {gallery.map((img, i) => (
+            <button
+              key={img}
+              type="button"
+              onClick={() => setActive(i)}
+              aria-label={`${project.title} — screenshot ${i + 1}`}
+              className={`h-12 w-16 shrink-0 overflow-hidden rounded-md border transition-all ${
+                i === active
+                  ? "border-cyan-400 ring-2 ring-cyan-400/50"
+                  : "border-white/20 opacity-70 hover:opacity-100"
+              }`}
+            >
+              <ImageWithFallback
+                src={img}
+                alt=""
+                className="w-full h-full object-cover"
+                isImport={true}
+              />
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function FeaturedProjects() {
   return (
@@ -72,12 +120,7 @@ export function FeaturedProjects() {
             >
               <div className={`grid grid-cols-1 ${index % 2 === 0 ? 'lg:grid-cols-2' : 'lg:grid-cols-2'} gap-0`}>
                 <div className={`${index % 2 === 1 ? 'lg:order-2' : ''}`}>
-                  <ImageWithFallback
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-full object-cover"
-                    isImport={true}
-                  />
+                  <ProjectMedia project={project} />
                 </div>
                 
                 <div className={`p-8 flex flex-col justify-center ${index % 2 === 1 ? 'lg:order-1' : ''}`}>
